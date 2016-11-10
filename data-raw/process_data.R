@@ -57,14 +57,14 @@ get_countries <- function() {
   countries <- countries[, c(2, 4, 6)]
   countries <- unique(countries)
   names(countries) <- c("country_code", "description", "sub_code")
-  
+  load("data-raw/forbind.Rda")
   # Remove entries without sub_code and format the data
   index <- which(grepl("^\\.", countries$description) | countries$sub_code != "")
   countries <- countries[index, ]
   countries$sub_code <- ifelse(countries$sub_code != "",
                                paste(countries$country_code, countries$sub_code, sep = "-"),
                                "")
-  
+  countries <- rbind(countries,forbind)
   # Fix the encoding
   countries <- data.frame(sapply(countries, iconv, to = "ASCII//TRANSLIT"))
   
